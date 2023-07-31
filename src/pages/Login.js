@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import login from "../assets/login.css";
+import {request} from "../utils/utils.js"
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -9,6 +10,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [errorMessages, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [user, setUsers] = useState([]);
 
   const database = [
     {
@@ -50,9 +52,9 @@ export default function Login() {
       <div className="error">{errorMessages.message}</div>
     );
 
-  //navigare catre pagina de home  
-  function navigateToHome(e) {
-    e.preventDefault();
+  //navigare catre pagina de home
+  function navigateToHome() {
+    // e.preventDefault(e);
     navigate("/home");
   }
 
@@ -75,43 +77,55 @@ export default function Login() {
     setPassword(pass.target.value);
   }
 
+
+  //localStorage getItem - iau cheia pt afisare
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.name) {
+      navigateToHome();
+    }
+  }, []);
+  
   //functie care creeaza un obiect {data} luat din baza de date
   //se "conecteaza" la adresa data si aplica metoda de post pentru a trimite raspunsul cerut
-  function login(e) {
+  async function login(e) {
     let data = { name: "Apetrei Madalina", password: "parola" };
-    fetch("http://localhost:3001/login", { method: "POST", body: data }).then(
-      (res) => {
-        let data = res.json();
-        console.log(data);
-       // navigateToHome(e);
-      }
-    );
+    const url = "http://localhost:3001/login";
+    try {
+      const responseData = await request(url, "POST", data);
+      localStorage.setItem("user", JSON.stringify(responseData));
+      console.log(responseData);
+    } catch (error) {
+      console.error( error);
+      throw error;
+    }
+    
   }
   return (
-    <div class="form-login">
+    <div className="form-login">
       <form action="" onSubmit={login}>
-        <div class="login">
+        <div className="login">
           <input
             type="email"
-            class="form-control"
+            className="form-control"
             name="errUser"
             placeholder="Email"
             onChange={Username}
           />
           {errMessages("errUser")}
         </div>
-        <div class="login">
+        <div className="login">
           <input
             type={checkPass ? "text" : "password"}
-            class="form-control"
+            className="form-control"
             name="errPass"
             placeholder="Password"
             onChange={Password}
           />
           {errMessages("errPass")}
         </div>
-        <div class="showPass">
-          <label for="showPass">Show password?</label>
+        <div className="showPass">
+          <label className="showPass">Show password?</label>
           <input
             type="checkbox"
             onChange={(e) => {
@@ -120,7 +134,7 @@ export default function Login() {
           />
         </div>
         <div>
-          <button class="btn" type="submit" disabled={!validateForm()}>
+          <button className="btn" type="submit" disabled={!validateForm()}>
             Log in
           </button>
         </div>
