@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Children, useEffect, useState } from "react";
 import home from "../assets/home.css";
 import MUIDataTable from "mui-datatables";
 import { request } from "../utils/utils.js";
@@ -13,10 +13,11 @@ import ListItemText from "@mui/material/ListItemText";
 import EmojiTransportation from "@mui/icons-material/EmojiTransportation";
 import TimeToLeave from "@mui/icons-material/TimeToLeave";
 import Menu from "@mui/icons-material/Menu";
+import { useNavigate } from "react-router-dom";
 
-export default function Home() {
+export default function Home({children}) {
   const drawerWidth = 240;
-
+  const navigator = useNavigate();
   const StyledDrawer = styled(Drawer)(({ theme }) => ({
     width: drawerWidth,
     flexShrink: 0,
@@ -26,89 +27,60 @@ export default function Home() {
     },
   }));
 
-  const [data, setData] = useState([]);
+  const [show, setShow] = useState(false);
 
-  const [show,setShow]=useState(false);
-
-  const columns = ["Brand", "Model", "Color", "Range"];
-
-  const options = {
-    filterType: "checkbox",
-  };
-  useEffect(() => {
-    const url = "http://localhost:3001/car";
-    try {
-      const fetchData = async () => {
-        const responseData = await request(url, "GET", null);
-        let formattedData = [];
-        responseData.forEach((element) =>
-          formattedData.push([
-            element.brand,
-            element.model,
-            element.culoare,
-            element.range,
-          ])
-        );
-
-        setData(formattedData);
-      };
-
-      fetchData();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }, []);
-
-  const handleItemClick = () => {
-    console.log("Item clicked");
-  };
-  const showDrawer =()=>{
+  const showDrawer = () => {
     setShow(!show);
   };
 
+  function handleItemClickCar(){
+    navigator("/cars");
+  }
+
+  function handleItemClickRental(){
+    navigator("/rental");
+  }
+  
   return (
     <div className="bgd">
       <StyledDrawer variant="permanent" anchor="left">
         <List>
           <ListItemButton divider onClick={showDrawer} open={show}>
             <ListItemIcon>
-              <Menu ></Menu>
-
+              <Menu />
             </ListItemIcon>
             <ListItemText primary="Menu" />
           </ListItemButton>
-          <Drawer variant = "persistent"  anchor="left" open={show}  PaperProps={{
-    sx: {
-      marginTop: 8
-    }
-  }}>
-          <List>
-            <ListItemButton divider onClick={handleItemClick}>
-              <ListItemIcon>
-                <EmojiTransportation />
-              </ListItemIcon>
-              <ListItemText primary="Rentals" />
-            </ListItemButton>
-          </List>
-          <List>
-            <ListItemButton divider onClick={handleItemClick}>
-              <ListItemIcon>
-                <TimeToLeave />
-              </ListItemIcon>
-              <ListItemText primary="Cars" />
-            </ListItemButton>
-          </List>
-        </Drawer>
+          <Drawer
+            variant="persistent"
+            anchor="left"
+            open={show}
+            PaperProps={{
+              sx: {
+                marginTop: 8,
+              },
+            }}
+          >
+            <List>
+              <ListItemButton divider onClick={handleItemClickRental}>
+                <ListItemIcon>
+                  <EmojiTransportation />
+                </ListItemIcon>
+                <ListItemText primary="Rentals" />
+              </ListItemButton>
+            </List>
+            <List>
+              <ListItemButton divider onClick={handleItemClickCar}>
+                <ListItemIcon>
+                  <TimeToLeave />
+                </ListItemIcon>
+                <ListItemText primary="Cars" />
+              </ListItemButton>
+            </List>
+          </Drawer>
         </List>
-
       </StyledDrawer>
-      <MUIDataTable
-        title={"Cars List"}
-        data={data}
-        columns={columns}
-        options={options}
-      />
+      {children}
     </div>
   );
 }

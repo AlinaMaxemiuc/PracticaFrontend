@@ -9,14 +9,18 @@ import {
 } from "react-router-dom";
 
 import Login from "../pages/Login";
-import Home from "../pages/Home";
+import Rental from "../pages/Rental";
+import Cars from "../pages/Cars";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Cars />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home/>}/>
+        <Route path="/home" element={<Cars/>}/>
+        <Route path="/cars" element={<Cars/>}/>
+        <Route path="/rental" element={<Rental/>}/>
       </Routes>
     </BrowserRouter>
   );
