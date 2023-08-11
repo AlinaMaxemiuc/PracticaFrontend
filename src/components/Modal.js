@@ -15,6 +15,7 @@ export default function Modal({
   isModalOpen,
   title,
   children,
+  onSave,
 }) {
   const [data, setData] = useState();
   const handleCloseModal = () => {
@@ -34,7 +35,7 @@ export default function Modal({
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>{children()}</DialogContent>
         <DialogActions>
-          <Button onClick={saveInfo}>Save</Button>
+          <Button onClick={onSave}>Save</Button>
           <Button onClick={handleCloseModal}>Close</Button>
         </DialogActions>
       </Dialog>

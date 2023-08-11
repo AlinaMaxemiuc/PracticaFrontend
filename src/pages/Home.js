@@ -15,7 +15,7 @@ import TimeToLeave from "@mui/icons-material/TimeToLeave";
 import Menu from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 
-export default function Home({children}) {
+export default function Home({ children }) {
   const drawerWidth = 240;
   const navigator = useNavigate();
   const StyledDrawer = styled(Drawer)(({ theme }) => ({
@@ -33,54 +33,56 @@ export default function Home({children}) {
     setShow(!show);
   };
 
-  function handleItemClickCar(){
+  function handleItemClickCar() {
     navigator("/cars");
   }
 
-  function handleItemClickRental(){
+  function handleItemClickRental() {
     navigator("/rental");
   }
-  
+
   return (
     <div className="bgd">
-      <StyledDrawer variant="permanent" anchor="left">
-        <List>
-          <ListItemButton divider onClick={showDrawer} open={show}>
-            <ListItemIcon>
-              <Menu />
-            </ListItemIcon>
-            <ListItemText primary="Menu" />
-          </ListItemButton>
-          <Drawer
-            variant="persistent"
-            anchor="left"
-            open={show}
-            PaperProps={{
-              sx: {
-                marginTop: 8,
-              },
-            }}
-          >
-            <List>
-              <ListItemButton divider onClick={handleItemClickRental}>
-                <ListItemIcon>
-                  <EmojiTransportation />
-                </ListItemIcon>
-                <ListItemText primary="Rentals" />
-              </ListItemButton>
-            </List>
-            <List>
-              <ListItemButton divider onClick={handleItemClickCar}>
-                <ListItemIcon>
-                  <TimeToLeave />
-                </ListItemIcon>
-                <ListItemText primary="Cars" />
-              </ListItemButton>
-            </List>
-          </Drawer>
-        </List>
-      </StyledDrawer>
-      {children}
+      <div className="first-container">
+        <StyledDrawer variant="permanent" anchor="left">
+          <List>
+            <ListItemButton divider onClick={showDrawer} open={show}>
+              <ListItemIcon>
+                <Menu />
+              </ListItemIcon>
+              <ListItemText primary="Menu" />
+            </ListItemButton>
+            <Drawer
+              variant="persistent"
+              anchor="left"
+              open={show}
+              PaperProps={{
+                sx: {
+                  marginTop: 8,
+                },
+              }}
+            >
+              <List>
+                <ListItemButton divider onClick={handleItemClickRental}>
+                  <ListItemIcon>
+                    <EmojiTransportation />
+                  </ListItemIcon>
+                  <ListItemText primary="Rentals" />
+                </ListItemButton>
+              </List>
+              <List>
+                <ListItemButton divider onClick={handleItemClickCar}>
+                  <ListItemIcon>
+                    <TimeToLeave />
+                  </ListItemIcon>
+                  <ListItemText primary="Cars" />
+                </ListItemButton>
+              </List>
+            </Drawer>
+          </List>
+        </StyledDrawer>
+      </div>
+      <div className="second-container">{children}</div>
     </div>
   );
 }
