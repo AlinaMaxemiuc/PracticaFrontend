@@ -67,19 +67,18 @@ export default function Rental() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  const handleDelete=async(rowsDeleted)=>{
+  const handleDelete = async (rowsDeleted) => {
     try {
-
-        const url = `http://localhost:3001/rentals/${data[rowsDeleted.data[0].index][5]}`; 
-        const response = await request(url, "DELETE", {});
+      const url = `http://localhost:3001/rentals/${data[rowsDeleted.data[0].index][5]}`;
+      console.log("Delete URL:", url);
   
-        if (response.status !== 200) {
-          console.log(`Failed to delete rental `);
+      const response = await request(url, "DELETE", {});
   
+      if (response.status !== 200) {
+        console.log(`Failed to delete rental`);
       }
-    } catch (error) {  
-      console.log(error);
+    } catch (error) {
+      console.log("Delete Error:", error);
     }
   };
 
